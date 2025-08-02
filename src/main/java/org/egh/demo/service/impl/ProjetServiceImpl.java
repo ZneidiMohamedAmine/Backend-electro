@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjetServiceImpl implements ProjetService {
@@ -25,14 +26,19 @@ public class ProjetServiceImpl implements ProjetService {
     }
 
     @Override
-    public Projet findById(Long id) {
-        return projetRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Projet not found with id: " + id));
+    public Optional<Projet> findById(Long id) {
+        return Optional.ofNullable(projetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Projet not found with id: " + id)));
     }
 
     @Override
     public Projet update(Long id, Projet projet) {
-        Projet existingProjet = findById(id);
+        Optional<Projet> existingProjetOptional = findById(id);
+        if (existingProjetOptional.isEmpty()) {
+            throw new RuntimeException("Projet not found with id: " + id);
+        }
+
+        Projet existingProjet = existingProjetOptional.get();
         existingProjet.setNom(projet.getNom());
         existingProjet.setStatus(projet.getStatus());
         existingProjet.setDateDebut(projet.getDateDebut());
@@ -40,11 +46,13 @@ public class ProjetServiceImpl implements ProjetService {
         existingProjet.setCout(projet.getCout());
         existingProjet.setDevis(projet.getDevis());
         existingProjet.setUtilisateur(projet.getUtilisateur());
+
         return projetRepository.save(existingProjet);
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         projetRepository.deleteById(id);
+        return false;
     }
 } 

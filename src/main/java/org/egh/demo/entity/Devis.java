@@ -1,5 +1,7 @@
 package org.egh.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Generated;
 import lombok.Getter;
@@ -15,14 +17,20 @@ public class Devis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private Travail type;
     private float montant;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
+    
     @ManyToOne
     @JoinColumn(nullable=false)
     private Utilisateur utilisateur;
 
+    @JsonIgnore
     @OneToOne(mappedBy="devis")
     private Projet projet;
 

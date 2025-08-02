@@ -1,5 +1,6 @@
 package org.egh.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,11 @@ public class Utilisateur implements UserDetails {
     private Role role;
     private String motdepasse;
 
+    @JsonIgnore
     @OneToMany(mappedBy="utilisateur")
     private List<Devis> devis;
 
+    @JsonIgnore
     @OneToMany(mappedBy="utilisateur")
     private List<Projet> projets;
 
