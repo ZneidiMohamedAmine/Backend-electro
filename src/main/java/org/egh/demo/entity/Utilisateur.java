@@ -26,7 +26,7 @@ public class Utilisateur implements UserDetails {
     private String motdepasse;
 
     @JsonIgnore
-    @OneToMany(mappedBy="utilisateur")
+    @OneToMany(mappedBy = "client")
     private List<Devis> devis;
 
     @JsonIgnore

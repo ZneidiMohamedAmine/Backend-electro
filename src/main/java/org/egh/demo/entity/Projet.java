@@ -19,7 +19,7 @@ public class Projet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
-    private Status status;
+    private StatusP status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date DateDebut;
@@ -37,7 +37,7 @@ public class Projet {
     @JoinColumn(nullable=false)
     private Utilisateur utilisateur;
 
-    @OneToMany(mappedBy="projet")
+    @OneToMany(mappedBy="projet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     @OneToOne(mappedBy="projet", cascade={CascadeType.PERSIST,CascadeType.REMOVE})

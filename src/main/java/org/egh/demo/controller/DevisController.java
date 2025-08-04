@@ -31,7 +31,7 @@ public class DevisController {
         devis.setType(dto.getType());
         devis.setMontant(dto.getMontant());
         devis.setStatus(dto.getStatus());
-        devis.setUtilisateur(utilisateur);
+        devis.setClient(utilisateur);
 
         Devis saved = devisService.save(devis);
         return ResponseEntity.ok(saved);

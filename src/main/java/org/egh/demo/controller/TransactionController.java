@@ -1,8 +1,11 @@
 package org.egh.demo.controller;
 
+import org.egh.demo.dto.TransactionRequestDTO;
+import org.egh.demo.dto.TransactionResponseDTO;
 import org.egh.demo.entity.Transaction;
 import org.egh.demo.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +19,15 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
-        return ResponseEntity.ok(transactionService.save(transaction));
+    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionRequestDTO transactionDTO) {
+        Transaction newTransaction = transactionService.createTransaction(transactionDTO);
+        return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Transaction>> getAllTransactions() {
-        return ResponseEntity.ok(transactionService.findAll());
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions() {
+        List<TransactionResponseDTO> transactions = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{id}")

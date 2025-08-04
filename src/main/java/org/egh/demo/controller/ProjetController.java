@@ -1,5 +1,7 @@
 package org.egh.demo.controller;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.egh.demo.dto.ProjetRequestDTO;
 import org.egh.demo.entity.Projet;
 import org.egh.demo.service.ProjetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,18 @@ public class ProjetController {
     @Autowired
     private ProjetService projetService;
 
+
+
     @PostMapping
-    public ResponseEntity<Projet> createProjet(@RequestBody Projet projet) {
-        Projet savedProjet = projetService.save(projet);
-        return ResponseEntity.ok(savedProjet);
+    public ResponseEntity<Projet> createProjet(@RequestBody ProjetRequestDTO projetDTO) {
+        try {
+            Projet savedProjet = projetService.save(projetDTO);
+            return ResponseEntity.ok(savedProjet);
+        } catch (EntityNotFoundException e) {
+            // Handle the case where the Devis or Utilisateur ID doesn't exist
+            // Returning a 404 Not Found is appropriate here
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping

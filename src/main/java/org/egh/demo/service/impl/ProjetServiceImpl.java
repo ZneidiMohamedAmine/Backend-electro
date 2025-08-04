@@ -1,7 +1,13 @@
 package org.egh.demo.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.egh.demo.dto.ProjetRequestDTO;
+import org.egh.demo.entity.Devis;
 import org.egh.demo.entity.Projet;
+import org.egh.demo.entity.Utilisateur;
+import org.egh.demo.repository.DevisRepository;
 import org.egh.demo.repository.ProjetRepository;
+import org.egh.demo.repository.UtilisateurRepository;
 import org.egh.demo.service.ProjetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +21,35 @@ public class ProjetServiceImpl implements ProjetService {
     @Autowired
     private ProjetRepository projetRepository;
 
+    @Autowired
+    private DevisRepository devisRepository;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
     @Override
-    public Projet save(Projet projet) {
+    public Projet save(ProjetRequestDTO projetDTO) {
+        // Find the Devis by ID, or throw an exception if not found
+        Devis devis = devisRepository.findById(projetDTO.getDevisId())
+                .orElseThrow(() -> new EntityNotFoundException("Devis with ID " + projetDTO.getDevisId() + " not found."));
+
+        // Find the Utilisateur by ID, or throw an exception if not found
+        Utilisateur utilisateur = utilisateurRepository.findById(projetDTO.getUtilisateurId())
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur with ID " + projetDTO.getUtilisateurId() + " not found."));
+
+        // Create and populate the Projet entity from the DTO
+        Projet projet = new Projet();
+        projet.setNom(projetDTO.getNom());
+        projet.setStatus(projetDTO.getStatus());
+        projet.setDateDebut(projetDTO.getDateDebut());
+        projet.setDateFin(projetDTO.getDateFin());
+        projet.setCout(projetDTO.getCout());
+
+        // Set the found entities
+        projet.setDevis(devis);
+        projet.setUtilisateur(utilisateur);
+
+        // Save the new Projet
         return projetRepository.save(projet);
     }
 

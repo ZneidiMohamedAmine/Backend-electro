@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
@@ -39,5 +40,18 @@ public class UtilisateurController {
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {
         utilisateurService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Utilisateur> getUtilisateurByEmail(@PathVariable String email) {
+        Optional<Utilisateur> utilisateur = Optional.ofNullable(utilisateurService.findUserByEmail(email));
+
+        // Check if the Optional object contains a value
+        if (utilisateur.isPresent()) {
+            return ResponseEntity.ok(utilisateur.get());
+        } else {
+            // Return a 404 Not Found response if no user is found
+            return ResponseEntity.notFound().build();
+        }
     }
 } 

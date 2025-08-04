@@ -63,7 +63,7 @@ public class SecurityConfiguration {
         return http
                 .cors()
                 .and()
-                .securityMatcher("/api/auth/**") // Only apply to /auth/**
+                .securityMatcher("/api/auth/**","/api/utilisateurs/email/") // Only apply to /auth/**
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for auth endpoints if stateless
                 .authorizeHttpRequests(request -> {
                     request.anyRequest().permitAll(); // Permit all requests to /auth/**
